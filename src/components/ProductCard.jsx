@@ -16,8 +16,8 @@ const ProductCard = ({ product }) => {
 
   return (
     <Link to={`/products/${product.id}`} className="group">
-      <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
-        <div className="relative">
+      <div className="card card-hover overflow-hidden">
+        <div className="relative -m-6 mb-0">
           {/* Product image */}
           <img 
             src={product.image} 
@@ -27,8 +27,8 @@ const ProductCard = ({ product }) => {
           
           {/* Out of stock overlay */}
           {!product.inStock && (
-            <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-              <span className="bg-red-500 text-white px-4 py-1 rounded-full text-sm font-medium">
+            <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+              <span className="badge-out-of-stock">
                 Out of Stock
               </span>
             </div>
@@ -37,34 +37,34 @@ const ProductCard = ({ product }) => {
           {/* Featured tag */}
           {product.featured && (
             <div className="absolute top-2 left-2">
-              <span className="bg-orange-500 text-white px-3 py-1 rounded-full text-xs font-medium">
+              <span className="badge-featured">
                 Featured
               </span>
             </div>
           )}
         </div>
         
-        <div className="p-4">
+        <div className="mt-4">
           {/* Category */}
-          <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">
+          <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">
             {product.category}
           </p>
           
           {/* Product name */}
-          <h3 className="text-lg font-semibold text-gray-800 mb-2 group-hover:text-blue-600">
+          <h3 className="text-lg font-semibold text-foreground mb-2 group-hover:text-primary transition-colors">
             {product.name}
           </h3>
           
           {/* Price */}
           <div className="flex items-center justify-between mb-3">
-            <p className="text-lg font-bold text-gray-900">
+            <p className="text-lg font-bold text-foreground">
               ₹{product.price.toLocaleString('en-IN')}
             </p>
             
             {/* Rating */}
             <div className="flex items-center">
               <FaStar className="text-yellow-400 mr-1" />
-              <span className="text-sm text-gray-600">4.5</span>
+              <span className="text-sm text-muted-foreground">4.5</span>
             </div>
           </div>
           
@@ -72,11 +72,12 @@ const ProductCard = ({ product }) => {
           <button
             onClick={handleAddToCart}
             disabled={!product.inStock}
-            className={`w-full flex items-center justify-center px-4 py-2 text-sm font-medium rounded-md ${
+            className={`w-full flex items-center justify-center px-4 py-2 text-sm font-medium rounded-md transition-colors ${
               product.inStock
-                ? 'bg-blue-600 text-white hover:bg-blue-700'
-                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                ? 'btn-primary'
+                : 'bg-muted text-muted-foreground cursor-not-allowed'
             }`}
+            aria-label={product.inStock ? `Add ${product.name} to cart` : `${product.name} is out of stock`}
           >
             <FaShoppingCart className="mr-2" />
             Add to Cart

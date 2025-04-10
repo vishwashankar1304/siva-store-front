@@ -5,6 +5,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 
+// Styles
+import './App.css';
+
 // Pages
 import Home from './pages/Home';
 import Products from './pages/Products';
