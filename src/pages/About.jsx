@@ -249,13 +249,19 @@ const About = () => {
               </div>
               
               <div className="md:w-1/2">
-                {/* Google Maps embed would go here in a real app */}
-                <div className="bg-gray-200 h-full min-h-[400px] flex items-center justify-center">
-                  <p className="text-center text-gray-600 p-4">
-                    <FaMapMarkerAlt className="text-4xl mx-auto mb-4" />
-                    <span className="block text-lg font-medium mb-2">Map Location</span>
-                    In a real app, a Google Maps embed would be displayed here showing the store location.
-                  </p>
+                {/* Google Maps embed */}
+                <div className="h-full min-h-[400px]">
+                  <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3914.0307695307393!2d77.54052121480724!3d11.178308391981177!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba908837ecc7c13%3A0xaa82c8e5e3f35a13!2sVijayamangalam%2C%20Tamil%20Nadu%20638056!5m2!1sen!2sin" 
+                    width="100%" 
+                    height="100%" 
+                    style={{ border: 0, minHeight: "400px" }} 
+                    allowFullScreen="" 
+                    loading="lazy" 
+                    referrerPolicy="no-referrer-when-downgrade"
+                    title="Siva Traders Location"
+                    className="w-full h-full"
+                  ></iframe>
                 </div>
               </div>
             </div>
