@@ -5,6 +5,7 @@ import { FaShoppingCart, FaBolt, FaStar, FaCheckCircle, FaArrowLeft } from 'reac
 import { products } from '../data/products';
 import { useCart } from '../context/CartContext';
 import ProductCard from '../components/ProductCard';
+import ImageWithFallback from '../components/ImageWithFallback';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -124,9 +125,9 @@ const ProductDetail = () => {
         {/* Product info */}
         <div className="bg-white rounded-lg shadow-sm overflow-hidden">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 p-6">
-            {/* Product image */}
+            {/* Product image with fallback */}
             <div className="flex items-center justify-center">
-              <img 
+              <ImageWithFallback 
                 src={product.image} 
                 alt={product.name}
                 className="w-full h-auto max-w-md object-cover rounded-lg"

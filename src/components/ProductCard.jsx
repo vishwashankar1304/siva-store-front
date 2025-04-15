@@ -2,6 +2,7 @@
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { FaShoppingCart, FaStar } from 'react-icons/fa';
+import ImageWithFallback from './ImageWithFallback';
 
 const ProductCard = ({ product }) => {
   const { addToCart } = useCart();
@@ -18,8 +19,8 @@ const ProductCard = ({ product }) => {
     <Link to={`/products/${product.id}`} className="group">
       <div className="card card-hover overflow-hidden">
         <div className="relative -m-6 mb-0">
-          {/* Product image */}
-          <img 
+          {/* Product image with fallback */}
+          <ImageWithFallback 
             src={product.image} 
             alt={product.name}
             className="w-full h-56 object-cover transition-transform duration-300 group-hover:scale-105"
