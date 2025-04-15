@@ -6,6 +6,13 @@ const ImageWithFallback = ({ src, alt, className, onLoad, ...props }) => {
   const [hasError, setHasError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   
+  // Convert external URLs to local paths if needed
+  const imageSrc = src.startsWith('http') 
+    ? src 
+    : src.startsWith('/') 
+      ? src 
+      : `/${src}`;
+  
   useEffect(() => {
     // Reset states when the src changes
     setHasError(false);
@@ -15,6 +22,7 @@ const ImageWithFallback = ({ src, alt, className, onLoad, ...props }) => {
   const handleError = () => {
     setHasError(true);
     setIsLoading(false);
+    console.log(`Image failed to load: ${imageSrc}`);
   };
 
   const handleLoad = () => {
@@ -41,7 +49,7 @@ const ImageWithFallback = ({ src, alt, className, onLoad, ...props }) => {
         </div>
       )}
       <img 
-        src={src} 
+        src={imageSrc} 
         alt={alt}
         onError={handleError}
         onLoad={handleLoad}
