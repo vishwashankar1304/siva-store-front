@@ -1,12 +1,25 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ImageOff } from 'lucide-react';
 
-const ImageWithFallback = ({ src, alt, className, ...props }) => {
+const ImageWithFallback = ({ src, alt, className, onLoad, ...props }) => {
   const [hasError, setHasError] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   
+  useEffect(() => {
+    // Reset states when the src changes
+    setHasError(false);
+    setIsLoading(true);
+  }, [src]);
+
   const handleError = () => {
     setHasError(true);
+    setIsLoading(false);
+  };
+
+  const handleLoad = () => {
+    setIsLoading(false);
+    if (onLoad) onLoad();
   };
 
   if (hasError) {
@@ -21,13 +34,21 @@ const ImageWithFallback = ({ src, alt, className, ...props }) => {
   }
 
   return (
-    <img 
-      src={src} 
-      alt={alt}
-      onError={handleError}
-      className={className}
-      {...props}
-    />
+    <>
+      {isLoading && (
+        <div className={`absolute inset-0 flex items-center justify-center bg-gray-100 rounded-lg ${className}`}>
+          <div className="animate-pulse w-full h-full bg-gray-200 rounded-lg"></div>
+        </div>
+      )}
+      <img 
+        src={src} 
+        alt={alt}
+        onError={handleError}
+        onLoad={handleLoad}
+        className={`${className} ${isLoading ? 'invisible' : 'visible'}`}
+        {...props}
+      />
+    </>
   );
 };
 

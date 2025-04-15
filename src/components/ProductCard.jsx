@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { FaShoppingCart, FaStar } from 'react-icons/fa';
 import ImageWithFallback from './ImageWithFallback';
+import { toast } from 'sonner';
 
 const ProductCard = ({ product }) => {
   const { addToCart } = useCart();
@@ -11,8 +12,8 @@ const ProductCard = ({ product }) => {
     e.preventDefault();
     e.stopPropagation();
     addToCart(product, 1);
-    // In a real app, you'd show a toast notification here
-    alert(`${product.name} added to cart!`);
+    
+    toast.success(`${product.name} added to cart!`);
   };
 
   return (
@@ -20,11 +21,13 @@ const ProductCard = ({ product }) => {
       <div className="card card-hover overflow-hidden">
         <div className="relative -m-6 mb-0">
           {/* Product image with fallback */}
-          <ImageWithFallback 
-            src={product.image} 
-            alt={product.name}
-            className="w-full h-56 object-cover transition-transform duration-300 group-hover:scale-105"
-          />
+          <div className="relative w-full h-56">
+            <ImageWithFallback 
+              src={product.image} 
+              alt={product.name}
+              className="w-full h-56 object-cover transition-transform duration-300 group-hover:scale-105"
+            />
+          </div>
           
           {/* Out of stock overlay */}
           {!product.inStock && (
