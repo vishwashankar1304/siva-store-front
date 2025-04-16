@@ -21,41 +21,79 @@ import About from './pages/About';
 import Contact from './pages/Contact';
 import NotFound from "./pages/NotFound";
 
-// Components
+// Customer Components
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import ProtectedRoute from './components/ProtectedRoute';
+
+// Admin Pages
+import AdminLogin from './pages/admin/AdminLogin';
+import Dashboard from './pages/admin/Dashboard';
+import AdminProducts from './pages/admin/Products';
+
+// Admin Components
+import AdminLayout from './components/admin/AdminLayout';
+import AdminRoute from './components/AdminRoute';
 
 const App: React.FC = () => (
   <AuthProvider>
     <CartProvider>
       <BrowserRouter>
         <Toaster position="top-right" />
-        <Navbar />
-        <main>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/products" element={<Products />} />
-            <Route path="/products/:id" element={<ProductDetail />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/checkout" element={
-              <ProtectedRoute>
-                <Checkout />
-              </ProtectedRoute>
-            } />
-            <Route path="/order-success" element={
-              <ProtectedRoute>
-                <OrderSuccess />
-              </ProtectedRoute>
-            } />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/contact" element={<Contact />} />
+        
+        <Routes>
+          {/* Admin Routes */}
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/admin" element={
+            <AdminRoute>
+              <AdminLayout />
+            </AdminRoute>
+          }>
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="products" element={<AdminProducts />} />
+            {/* More admin routes will go here */}
             <Route path="*" element={<NotFound />} />
-          </Routes>
-        </main>
-        <Footer />
+          </Route>
+          
+          {/* Customer Routes */}
+          <Route path="/" element={
+            <>
+              <Navbar />
+              <main>
+                <Home />
+              </main>
+              <Footer />
+            </>
+          } />
+          <Route path="*" element={
+            <>
+              <Navbar />
+              <main>
+                <Routes>
+                  <Route path="/products" element={<Products />} />
+                  <Route path="/products/:id" element={<ProductDetail />} />
+                  <Route path="/cart" element={<Cart />} />
+                  <Route path="/checkout" element={
+                    <ProtectedRoute>
+                      <Checkout />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/order-success" element={
+                    <ProtectedRoute>
+                      <OrderSuccess />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/signup" element={<Signup />} />
+                  <Route path="/about" element={<About />} />
+                  <Route path="/contact" element={<Contact />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </main>
+              <Footer />
+            </>
+          } />
+        </Routes>
       </BrowserRouter>
     </CartProvider>
   </AuthProvider>

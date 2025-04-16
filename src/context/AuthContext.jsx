@@ -45,6 +45,30 @@ export const AuthProvider = ({ children }) => {
     });
   };
 
+  // Admin login function (simulated)
+  const adminLogin = (email, password) => {
+    return new Promise((resolve, reject) => {
+      // Simulating API call
+      setTimeout(() => {
+        // For demo: only accept "admin@example.com" with password "admin123"
+        if (email === "admin@example.com" && password === "admin123") {
+          const user = {
+            id: "admin1",
+            name: "Admin User",
+            email: email,
+            isAdmin: true
+          };
+          
+          setCurrentUser(user);
+          localStorage.setItem('user', JSON.stringify(user));
+          resolve(user);
+        } else {
+          reject(new Error("Invalid admin credentials"));
+        }
+      }, 500);
+    });
+  };
+
   // Register function (simulated)
   const register = (name, email, password) => {
     return new Promise((resolve, reject) => {
@@ -74,9 +98,11 @@ export const AuthProvider = ({ children }) => {
   const value = {
     currentUser,
     login,
+    adminLogin,
     register,
     logout,
-    isAuthenticated: !!currentUser
+    isAuthenticated: !!currentUser,
+    isAdmin: currentUser?.isAdmin || false
   };
 
   return (
