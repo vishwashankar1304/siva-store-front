@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Toaster } from "sonner";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -20,6 +19,8 @@ import Signup from './pages/Signup';
 import About from './pages/About';
 import Contact from './pages/Contact';
 import NotFound from "./pages/NotFound";
+import Dashboard from './pages/Dashboard';
+import AdminUsers from './pages/admin/Users';
 
 // Customer Components
 import Navbar from './components/Navbar';
@@ -28,7 +29,6 @@ import ProtectedRoute from './components/ProtectedRoute';
 
 // Admin Pages
 import AdminLogin from './pages/admin/AdminLogin';
-import Dashboard from './pages/admin/Dashboard';
 import AdminProducts from './pages/admin/Products';
 
 // Admin Components
@@ -51,6 +51,7 @@ const App: React.FC = () => (
           }>
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="products" element={<AdminProducts />} />
+            <Route path="users" element={<AdminUsers />} />
             {/* More admin routes will go here */}
             <Route path="*" element={<NotFound />} />
           </Route>
@@ -87,6 +88,7 @@ const App: React.FC = () => (
                   <Route path="/signup" element={<Signup />} />
                   <Route path="/about" element={<About />} />
                   <Route path="/contact" element={<Contact />} />
+                  <Route path="/dashboard" element={<Dashboard />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </main>
