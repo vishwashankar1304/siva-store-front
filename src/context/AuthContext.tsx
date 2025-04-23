@@ -79,9 +79,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     return data.user;
   };
 
-  // Admin login: check fixed credentials against admin_users table and securely check the password with bcrypt
+  // Admin login: check credentials against admin_users table and use bcrypt to verify password
   const adminLogin = async (email: string, password: string) => {
     try {
+      console.log("Attempting admin login for:", email);
+      
       // Query admin_users table for this email
       const { data, error } = await supabase
         .from('admin_users')
@@ -89,36 +91,51 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         .eq('email', email)
         .single();
 
-      if (error || !data) {
-        console.error("Admin lookup error:", error);
-        throw new Error('Invalid admin credentials');
+      if (error) {
+        console.error("Admin lookup database error:", error);
+        throw new Error('Admin user not found');
+      }
+
+      if (!data) {
+        console.error("No admin user found with email:", email);
+        throw new Error('Admin user not found');
       }
 
       // Debug the stored password hash
-      console.log("Stored hash:", data.password);
-      console.log("Comparing with password:", password);
-
-      // data.password is hashed, check match
-      const passwordValid = await bcrypt.compare(password, data.password);
-      console.log("Password valid?", passwordValid);
+      console.log("Stored hash from DB:", data.password);
       
-      if (!passwordValid) {
-        throw new Error('Invalid admin credentials');
+      if (!data.password) {
+        console.error("No password hash stored for admin");
+        throw new Error('Invalid admin account configuration');
       }
 
-      // Simulate admin user object (no session, separate from app users)
-      setCurrentUser({ 
-        id: data.id, 
-        email: data.email, 
-        name: data.email.split('@')[0], 
-        isAdmin: true 
-      });
-      
-      // session is null for admin
-      setSession(null);
-      localStorage.setItem('adminUser', JSON.stringify({ id: data.id, email: data.email }));
-
-      return true;
+      // data.password should be hashed, verify with bcrypt
+      try {
+        const passwordValid = await bcrypt.compare(password, data.password);
+        console.log("Password verification result:", passwordValid);
+        
+        if (!passwordValid) {
+          throw new Error('Invalid password');
+        }
+        
+        // Success - create admin user object
+        const adminUser = { 
+          id: data.id, 
+          email: data.email, 
+          name: data.email.split('@')[0], 
+          isAdmin: true 
+        };
+        
+        console.log("Admin login successful, setting user:", adminUser);
+        setCurrentUser(adminUser);
+        setSession(null); // Admin users don't use Supabase auth session
+        localStorage.setItem('adminUser', JSON.stringify({ id: data.id, email: data.email }));
+        
+        return true;
+      } catch (bcryptError) {
+        console.error("Password verification error:", bcryptError);
+        throw new Error('Password verification failed');
+      }
     } catch (error) {
       console.error("Admin login error:", error);
       throw error;
@@ -140,8 +157,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       if (admin) {
         try {
           const obj = JSON.parse(admin);
+          console.log("Found admin user in localStorage:", obj);
           setCurrentUser({ ...obj, isAdmin: true });
-        } catch {
+        } catch (error) {
+          console.error("Error parsing admin user from localStorage:", error);
           setCurrentUser(null);
         }
       }

@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { toast } from 'sonner';
 import { FaLock } from 'react-icons/fa';
+import { Button } from "@/components/ui/button";
+import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form"; 
 
 const AdminLogin = () => {
   const [email, setEmail] = useState('');
@@ -23,6 +25,8 @@ const AdminLogin = () => {
     e.preventDefault();
     setLoading(true);
     setError('');
+    
+    console.log("Login form submitted with email:", email);
 
     try {
       await adminLogin(email, password);
