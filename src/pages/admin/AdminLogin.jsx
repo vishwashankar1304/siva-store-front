@@ -9,6 +9,7 @@ const AdminLogin = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const { adminLogin, isAdmin } = useAuth();
   const navigate = useNavigate();
 
@@ -21,12 +22,15 @@ const AdminLogin = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setError('');
 
     try {
       await adminLogin(email, password);
       toast.success('Logged in successfully');
       navigate('/admin/dashboard');
     } catch (error) {
+      console.error("Login error:", error);
+      setError(error.message || 'Failed to login');
       toast.error(error.message || 'Failed to login');
     } finally {
       setLoading(false);
@@ -49,6 +53,17 @@ const AdminLogin = () => {
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+          {error && (
+            <div className="mb-4 rounded-md bg-red-50 p-4">
+              <div className="flex">
+                <div className="ml-3">
+                  <h3 className="text-sm font-medium text-red-800">
+                    {error}
+                  </h3>
+                </div>
+              </div>
+            </div>
+          )}
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">

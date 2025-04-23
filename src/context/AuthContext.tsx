@@ -81,28 +81,48 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   // Admin login: check fixed credentials against admin_users table and securely check the password with bcrypt
   const adminLogin = async (email: string, password: string) => {
-    // Query admin_users table for this email
-    const { data, error } = await supabase
-      .from('admin_users')
-      .select('id, email, password')
-      .eq('email', email)
-      .maybeSingle();
+    try {
+      // Query admin_users table for this email
+      const { data, error } = await supabase
+        .from('admin_users')
+        .select('id, email, password')
+        .eq('email', email)
+        .single();
 
-    if (!data)
-      throw new Error('Invalid admin credentials');
+      if (error || !data) {
+        console.error("Admin lookup error:", error);
+        throw new Error('Invalid admin credentials');
+      }
 
-    // data.password is hashed, check match
-    const passwordValid = await bcrypt.compare(password, data.password);
-    if (!passwordValid)
-      throw new Error('Invalid admin credentials');
+      // Debug the stored password hash
+      console.log("Stored hash:", data.password);
+      console.log("Comparing with password:", password);
 
-    // Simulate admin user object (no session, separate from app users)
-    setCurrentUser({ id: data.id, email: data.email, name: data.email.split('@')[0], isAdmin: true });
-    // session is null for admin
-    setSession(null);
-    localStorage.setItem('adminUser', JSON.stringify({ id: data.id, email: data.email }));
+      // data.password is hashed, check match
+      const passwordValid = await bcrypt.compare(password, data.password);
+      console.log("Password valid?", passwordValid);
+      
+      if (!passwordValid) {
+        throw new Error('Invalid admin credentials');
+      }
 
-    return true;
+      // Simulate admin user object (no session, separate from app users)
+      setCurrentUser({ 
+        id: data.id, 
+        email: data.email, 
+        name: data.email.split('@')[0], 
+        isAdmin: true 
+      });
+      
+      // session is null for admin
+      setSession(null);
+      localStorage.setItem('adminUser', JSON.stringify({ id: data.id, email: data.email }));
+
+      return true;
+    } catch (error) {
+      console.error("Admin login error:", error);
+      throw error;
+    }
   };
 
   // Logout
