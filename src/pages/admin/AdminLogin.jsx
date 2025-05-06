@@ -1,37 +1,40 @@
 
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
 import { toast } from 'sonner';
 import { FaLock } from 'react-icons/fa';
-import { Button } from "@/components/ui/button";
-import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form"; 
 
 const AdminLogin = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const { adminLogin, isAdmin } = useAuth();
   const navigate = useNavigate();
 
-  // If already logged in as admin, redirect to admin dashboard
-  if (isAdmin) {
-    navigate('/admin/dashboard');
-    return null;
-  }
-
+  // Simplified admin login function - to be connected with MongoDB later
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
     
-    console.log("Login form submitted with email:", email);
+    console.log("Login attempt with email:", email);
 
     try {
-      await adminLogin(email, password);
-      toast.success('Logged in successfully');
-      navigate('/admin/dashboard');
+      // Temporary admin validation (replace with MongoDB)
+      // For development purposes only
+      if (email === 'admin@example.com' && password === 'admin123') {
+        // Store admin info in localStorage for now
+        localStorage.setItem('adminUser', JSON.stringify({ 
+          id: 'temp-admin-id', 
+          email, 
+          isAdmin: true 
+        }));
+        
+        toast.success('Logged in successfully');
+        navigate('/admin/dashboard');
+      } else {
+        throw new Error('Invalid credentials');
+      }
     } catch (error) {
       console.error("Login error:", error);
       setError(error.message || 'Failed to login');
